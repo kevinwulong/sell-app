@@ -1,9 +1,22 @@
 <template>
-  <div> seller!!!</div>
+  <div>
+    <z-header></z-header>
+    <z-tab></z-tab>
+    <div> seller!!!</div>
+  </div>
+ 
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  import header from '../header/header'
+  import tab from '../header/tab'
+
+  export default {
+    components: {
+      'z-header': header,
+      'z-tab': tab
+}
+}
 </script>
 
 <style lang="stylus" rel='stylesheet/stylus'>
