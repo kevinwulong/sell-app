@@ -28,12 +28,24 @@
     <img :src="seller.avatar" width="100%" height="100%">
   </div>
   <div v-show="detailShow" class="detail">
-    
+      <div class="detail-wrapper clearfix">
+        <div class="detail-main">
+          <h1 class="name">{{seller.name}}</h1>
+          <div class="star-wrapper">
+            <star :size="48" :score="seller.score"></star>
+          </div>
+          
+        </div>
+      </div>
+      <div class="detail-close">
+        <p>关闭</p>
+      </div>
   </div>
 </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import star from '../star/star'
   export default{
     props: {
       seller: {
@@ -52,6 +64,9 @@
     },
     created(){
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'invoice']
+    },
+    components: {
+      star
     }
   }
 </script>
@@ -166,5 +181,29 @@
       height:100%
       overflow:auto
       background: rgba(7,17,27,0.8)
+      .detail-wrapper
+        width:100%
+        min-height:100%
+        .detail-main
+          margin-top: 64px
+          padding-bottom: 64px
+          .name
+            line-height: 16px
+            text-align: center
+            font-size: 16px
+            font-weight: 700
+          .star-wrapper
+            margin-top:18px
+            padding:2px 0
+            text-align:center  
+      .detail-close
+          position: relative
+          width:32px
+          height:32px
+          margin:-64px auto 0 auto 
+          clear: both
+          font-size: 16px
+
+
 
 </style>
