@@ -39,6 +39,7 @@
           </li>
         </ul>
       </div>
+      <z-shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></z-shopcart>
     </div>
   </div>
  
@@ -48,6 +49,7 @@
   import header from '../header/header'
   import tab from '../header/tab'
   import BScroll from 'better-scroll'
+  import shopcart from '../shopcart/shopcart'
 
   const ErrOk= 0
   export default {
@@ -80,7 +82,8 @@
     },
     components: {
       'z-header': header,
-      'z-tab': tab
+      'z-tab': tab,
+      'z-shopcart': shopcart
     },
     computed: {
       currentIndex() {
