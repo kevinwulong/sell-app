@@ -22,6 +22,8 @@ module.exports = {
     'no-unused-vars':0,
     'space-before-function-paren': 0,
     'space-before-blocks': 0,
-    'space-infix-ops':0
+    'space-infix-ops':0,
+    'no-sequences':0
+
   }
 }
