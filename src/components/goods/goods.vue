@@ -33,13 +33,17 @@
                       ￥{{food.oldPrice}}
                     </span>
                   </div>
+                  <div class="cartcontrol-wrapper">
+                    <z-cartcontrol :food="food"></z-cartcontrol>
+                  </div>
+                  
                 </div>
               </li>
             </ul>
           </li>
         </ul>
       </div>
-      <z-shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></z-shopcart>
+      <z-shopcart :select-foods="selectFoods"  :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></z-shopcart>
     </div>
   </div>
  
@@ -50,6 +54,7 @@
   import tab from '../header/tab'
   import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
+  import cartcontrol from '../cartcontrol/cartcontrol'
 
   const ErrOk= 0
   export default {
@@ -83,7 +88,8 @@
     components: {
       'z-header': header,
       'z-tab': tab,
-      'z-shopcart': shopcart
+      'z-shopcart': shopcart,
+      'z-cartcontrol': cartcontrol
     },
     computed: {
       currentIndex() {
@@ -95,6 +101,17 @@
           }
         }
         return 0
+      },
+      selectFoods() {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food)
+            }
+          })
+        })
+        return foods
       }
     },
     methods: {
@@ -103,6 +120,7 @@
           click: true
         })
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          click: true,
           probeType: 3
         })
         this.foodsScroll.on('scroll', (pos) => {
@@ -230,5 +248,10 @@
           text-decoration: line-through
           font-size: 10px
           color:rgb(147,153,159)
+       .cartcontrol-wrapper
+         position: absolute
+         right: 0
+         bottom:12px
+
 
 </style>
