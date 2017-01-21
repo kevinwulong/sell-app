@@ -34,9 +34,27 @@
                 </z-split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <z-ratingselect :select-type="selectType" :only-content="onlyContent"
+                    <z-ratingselect @increment="incrementTotal" :select-type="selectType" :only-content="onlyContent"
                     :desc="desc" :ratings="food.ratings"></z-ratingselect>
+                     <div class="rating-wrapper">
+                          <ul v-show="food.ratings && food.ratings.length">
+                                <li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings" class="rating-item border-1px">
+                                  <div class="user">
+                                            <div class="name">{{rating.username}}</div>
+                                            <div class="avatar" width='12' height="12" :src="rating.avatar"></div>
+                                    </div>
+                                            <div class="time">{{rating.rateTime | formatDate}}</div>
+                                            <p class="text">{{rating.text}}</p>
+                                  
+                                </li>
+                          </ul>
+                          <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
+                          没有更多评价
+                          </div>
+                    </div>
                 </div>
+                </div>
+               
         </div>
   </div>
  
@@ -48,12 +66,12 @@
   import cartcontrol from '../cartcontrol/cartcontrol'
   import split from '../split/split'
   import ratingselect from '../ratingselect/ratingselect'
+  import {formatDate} from '../../common/js/date'
 
-  const POSITIVE = 0
-  const NEGATIVE = 1
   const ALL =2
 
   export default {
+
     props: {
       food: {
         type: Object
@@ -77,14 +95,21 @@
         this.selectType = ALL
         this.onlyContent = true
         this.$nextTick(() => {
-           if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.food, {
-                click: true
-            })
+             if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.food, {
+                  click: true
+              })
            }
            else {
-            this.scroll.refresh()
+              this.scroll.refresh()
            }
+        })
+      },
+      
+      incrementTotal(type, data) {
+        this[type] = data
+        this.$nextTick(() => {
+          this.scroll.refresh()
         })
       },
       hide() {
@@ -95,17 +120,35 @@
           return
         }
         Vue.set(this.food, 'count', 1)
+      },
+      needShow(type, text) {
+        if (this.onlyContent && !text) {
+          return false
+        }
+        if (this.selectType ===ALL) {
+          return true
+        }
+        else {
+          return type === this.selectType
+        }
       }
     },
     components: {
       'z-cartcontrol': cartcontrol,
       'z-split': split,
       'z-ratingselect': ratingselect
+    },
+    filters: {
+      formatDate(time) {
+        let date =new Date(time)
+        return formatDate(date, 'yyyy-MM-dd hh:mm')
+      }
     }
   }
 </script>
 
 <style lang="stylus" rel='stylesheet/stylus'>
+  @import "../../common/stylus/mixin"
   .food
     position: fixed
     top: 0
@@ -200,5 +243,38 @@
              margin-left:18px
              font-size: 14px
              color: rgb(7,17,27)
+       .rating-wrapper
+             padding: 0 18px
+             .rating-item
+                   position:relative
+                   padding: 16px 0
+                   border-1px(rgba(7,17,27,0.1))
+                   .user 
+                          position:absolute
+                          right: 0
+                          top: 16px 
+                          font-size: 0
+                          line-height: 12px 
+                          .name 
+                               display: inline-block
+                               vertical-align: top
+                               font-size: 10px
+                               color: rgb(147,153,159)
+                               margin-right: 6px             
+                          .avatar
+                               border-radius: 50%
+                   .time
+                         margin-bottom 6px
+                         line-height 12px
+                         font-size 10px
+                         color rgb(147, 153, 159)
+                   .text
+                         line-height 16px
+                         font-size 12px
+                         color rgb(7, 17, 27)
+             .no-rating
+                   padding: 16px 0
+                   font-size: 12px 
+                   color:rgb(147,153,159)
 
 </style>
