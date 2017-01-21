@@ -7,7 +7,7 @@
  
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import header from '../header/header'
   import tab from '../header/tab'
   

@@ -24,7 +24,11 @@ module.exports = {
     'space-before-blocks': 0,
     'space-infix-ops':0,
     'no-sequences':0,
-    'brace-style':0
+    'brace-style':0,
+    'no-tabs':0,
+    'no-mixed-spaces-and-tabs':0,
+    'no-trailing-spaces':0,
+    'key-spacing':0
 
   }
 }

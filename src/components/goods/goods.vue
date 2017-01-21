@@ -3,58 +3,58 @@
     <z-header :seller='seller'></z-header>
     <z-tab></z-tab>
     <div class="goods">
-      <div class="menu-wrapper" ref="menuWrapper">
-        <ul>
-              <li v-for="(item, index) in goods" class="menu-item border-1px" :class="{'current':currentIndex === index}"
-              @click="selectMenu(index,$event)">
-                  <span class="text " >
-                    <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
-                  </span>
-              </li>
-        </ul>
-      </div>
-      <div class="foods-wrapper" ref="foodsWrapper">
-        <ul>
-          <li v-for="item in goods" class="food-list food-list-hook">
-            <h1 class="title">{{item.name}}</h1>
-            <ul>
-              <li v-for="food in item.foods" class="food-item border-1px">
-                <div class="icon">
-                  <img width="57" height="57" :src="food.icon">
-                </div>
-                <div class="content">
-                  <h2 class="name">{{food.name}}</h2>
-                  <p class="desc">{{food.description}}</p>
-                  <div class="extra">
-                    <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
-                  </div>
-                  <div class="price">
-                    <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">
-                      ￥{{food.oldPrice}}
+        <div class="menu-wrapper" ref="menuWrapper">
+          <ul>
+                <li v-for="(item, index) in goods" class="menu-item border-1px" :class="{'current':currentIndex === index}"
+                @click="selectMenu(index,$event)">
+                    <span class="text " >
+                      <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
                     </span>
-                  </div>
-                  <div class="cartcontrol-wrapper">
-                    <z-cartcontrol :food="food"></z-cartcontrol>
-                  </div>
-                  
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <z-shopcart :select-foods="selectFoods"  :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></z-shopcart>
+                </li>
+          </ul>
+        </div>
+        <div class="foods-wrapper" ref="foodsWrapper">
+          <ul>
+            <li v-for="item in goods" class="food-list food-list-hook">
+              <h1 class="title">{{item.name}}</h1>
+              <ul>
+                <li @click="selectFood(food,$event) "v-for="food in item.foods" class="food-item border-1px">
+                      <div class="icon">
+                        <img width="57" height="57" :src="food.icon">
+                      </div>
+                      <div class="content">
+                        <h2 class="name">{{food.name}}</h2>
+                        <p class="desc">{{food.description}}</p>
+                        <div class="extra">
+                          <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
+                        </div>
+                        <div class="price">
+                         <span class="now">￥{{food.price}}</span>
+                         <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                        </div>
+                        <div class="cartcontrol-wrapper">
+                          <z-cartcontrol :food="food"></z-cartcontrol>
+                        </div>             
+                      </div></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <z-shopcart :select-foods="selectFoods"  :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice">
+        </z-shopcart>
     </div>
+    <z-food :food="selectedFood" ref="food"></z-food>
   </div>
  
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import header from '../header/header'
   import tab from '../header/tab'
   import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
   import cartcontrol from '../cartcontrol/cartcontrol'
+  import food from '../food/food'
 
   const ErrOk= 0
   export default {
@@ -63,7 +63,8 @@
         seller: {},
         goods: [],
         listHeight: [],
-        scrolly: 0
+        scrolly: 0,
+        selectedFood: {}
       }
     },
     created () {
@@ -89,7 +90,8 @@
       'z-header': header,
       'z-tab': tab,
       'z-shopcart': shopcart,
-      'z-cartcontrol': cartcontrol
+      'z-cartcontrol': cartcontrol,
+      'z-food': food
     },
     computed: {
       currentIndex() {
@@ -144,6 +146,13 @@
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
+      },
+      selectFood(food, event) {
+         if (event.constructed) {
+          return
+        }
+        this.selectedFood = food
+        this.$refs.food.show()
       }
     }
 }
